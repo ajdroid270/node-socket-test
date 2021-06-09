@@ -1,8 +1,9 @@
-const { v4: uuidv4 } = require("uuid");
+const { addNewMessage } = require("../db");
+
 module.exports = (io, socket) => {
-  const createMessage = (payload, cb) => {
+  const createMessage = async (payload, cb) => {
     console.log(payload);
-    let id = uuidv4();
+    let id = await addNewMessage(payload);
     io.sockets.in(payload.room).emit("message", { ...payload, id });
     cb?.(id);
   };

@@ -4,6 +4,7 @@ const http = require("http");
 const socket = require("socket.io");
 const conversationHandlers = require("./conversation/conversationHandlers");
 const messageHandlers = require("./message/messageHandlers");
+const { getMessagesFromConversation } = require("./db");
 
 // App setup
 const PORT = 5000;
@@ -15,8 +16,10 @@ app.get("/", (req, res) => {
   res.json({ hi: "hello" });
 });
 
-app.get("/chat", (req, res) => {
-  res.json({ messages: [{ id: 41658, message: "Hi" }] });
+app.get("/chat", async (req, res) => {
+  let { convId } = req.query;
+  let messages = await getMessagesFromConversation(convId);
+  res.status(200).json(messages);
 });
 
 // Socket setup
